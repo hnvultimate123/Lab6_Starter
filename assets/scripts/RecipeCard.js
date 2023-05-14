@@ -6,9 +6,10 @@ class RecipeCard extends HTMLElement {
   constructor() {
     super(); // Inheret everything from HTMLElement
     const shadow = this.attachShadow({mode:"open"});
-    let article = document.createElement("article");
+    let article = document.createElement("ARTICLE");
+    article.setAttribute('id', 'article')
     let style = document.createElement("style");
-    style.textContent =  `* {
+    style.innerHTML =  `* {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
@@ -83,9 +84,9 @@ class RecipeCard extends HTMLElement {
       color: #70757A;
       font-size: 12px;
     }`;
-
-    shadow.appendChild(article);
+    this.article = article;
     shadow.appendChild(style);
+    shadow.appendChild(article);
     // EXPOSE - START (All expose numbers start with A)
     // A1. TODO - Attach the shadow DOM to this Web Component (leave the mode open)
     // A2. TODO - Create an <article> element - This will hold our markup once our data is set
@@ -118,25 +119,22 @@ class RecipeCard extends HTMLElement {
   set data(data) {
     // If nothing was passed in, return
     if (!data) return;
-    let article = document.getElementsByClassName("article");
-    article = article[article.length - 1];
-    article.innerHTML = `<article>
-    <img src="https://link-to-article.com/recipe-thumbnail.jpg"
-      alt="Recipe Title">
+    let article = this.article;
+    article.innerHTML = `<img src="${data.imgSrc}"
+      alt="${data.imgAlt}">
     <p class="title">
-      <a href="https://link-to-article.com">Title</a>
+      <a href="${data.titleLnk}">${data.titleTxt}</a>
     </p>
-    <p class="organization">The Chef's Organization</p>
+    <p class="organization">${data.organization}</p>
     <div class="rating">
-      <span>5</span>
-      <img src="/assets/images/icons/5-star.svg" alt="5 stars">
-      <span>(500)</span>
+      <span>${data.rating}</span>
+      <img src="/assets/images/icons/${data.rating}-star.svg" alt="${data.rating} stars">
+      <span>(${data.numRatings})</span>
     </div>
-    <time>50 min</time>
+    <time>${data.lengthTime}</time>
     <p class="ingredients">
-      Comma, Separated, List, of, Ingredients
-    </p>
-  </article>`;
+      ${data.ingredients}
+    </p>`;
     // A6. TODO - Select the <article> we added to the Shadow DOM in the constructor
     // A7. TODO - Set the contents of the <article> with the <article> template given in
     //           cardTemplate.html and the data passed in (You should only have one <article>,
